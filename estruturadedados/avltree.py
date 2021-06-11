@@ -29,28 +29,95 @@ class AVL():
             raise ValueError('chave já está na lista')
         self._checkBalance(node)        
 
+    def inOrder(self, node='root', chave=False):
+        node = self.root if node == 'root' else node
+        if self._isEmpty():
+            raise IndexError('Árvore vazia')
+        if node.left:
+            self.inOrder(node.left, chave)
+        if chave:
+            print(node.chave)
+        else:
+            print(node.valor)
+        if node.right:
+            self.inOrder(node.right, chave)
+
+    def search(self, chave, node='root'):
+        node = self.root if node == 'root' else node
+        if self._isEmpty():
+            raise IndexError('Árvore vazia')
+        while node:
+            if chave == node.chave:
+                return node
+            if chave < node.chave:
+                node = node.left
+            elif chave > node.chave:
+                node = node.right
+        raise ValueError('Node não está na árvore')
+
+    def delete(self, chave, node='root'):
+        node = self.root if node == 'root' else node
+        if self._isEmpty():
+            raise IndexError('Árvore vazia')
+        elif node == None:
+            raise ValueError('Node não está na árvore')
+        elif chave < node.chave:
+            node.left = self.delete(chave, node.left)
+        elif chave > node.chave:
+            node.right = self.delete(chave, node.right)
+        elif node.chave == chave:
+            if node.isLeaf():
+                node = None
+                self.size -= 1
+                return
+            elif node.left == None:
+                node = node.right
+                self.size -= 1
+                return node
+            elif node.right == None:
+                node = node.left
+                self.size -= 1
+                return node
+            elif node.right and node.left:
+                root = False
+                if node == self.root:
+                    root = True                 
+                nMax = self._getMax(node.left)
+                node.chave = nMax.chave
+                node.valor = nMax.valor
+                node.left = self.delete(nMax.chave, node.left)
+                if root:
+                    self.root = node
+                return node
+        self._checkBalance(node)
+        return node
+
+    def inserirLista(self, lista):
+        for i in lista:
+            self.insert(i)
+
     def _checkBalance(self, node):
-        bf = self.balanceFactor(node)
-        if bf > 1 and self.balanceFactor(node.left) == 1:
+        bf = self._balanceFactor(node)
+        if bf > 1 and self._balanceFactor(node.left) == 1:
             self._rightRotate(node)
             return
-        if bf < -1 and self.balanceFactor(node.right) == -1:
+        if bf < -1 and self._balanceFactor(node.right) == -1:
             self._leftRotate(node)
             return
-        if bf > 1 and self.balanceFactor(node.left) == -1:
+        if bf > 1 and self._balanceFactor(node.left) == -1:
             node.left = self._leftRotate(node.left, double=True)
             self._rightRotate(node)
             return
-        if bf < -1 and self.balanceFactor(node.right) == 1:
+        if bf < -1 and self._balanceFactor(node.right) == 1:
             node.right = self._rightRotate(node.right, double=True)
             self._leftRotate(node)
             return 
 
-    def balanceFactor(self, node='root'):
+    def _balanceFactor(self, node='root'):
         node = self.root if node == 'root' else node
         if node == None:
             return -1
-        return (self.getHeight(node.left) - self.getHeight(node.right))
+        return (self._getHeight(node.left) - self._getHeight(node.right))
 
     def _leftRotate(self, node, double=False):
         root = False
@@ -133,78 +200,10 @@ class AVL():
             return True
         return False
 
-    def getHeight(self, node='root'):
+    def _getHeight(self, node='root'):
         node = self.root if node == 'root' else node
         if node == None:
             return -1
-        left = self.getHeight(node.left)
-        right = self.getHeight(node.right)
+        left = self._getHeight(node.left)
+        right = self._getHeight(node.right)
         return max(left, right) + 1
-
-    def inOrder(self, node='root', chave=False):
-        node = self.root if node == 'root' else node
-        if self._isEmpty():
-            raise IndexError('Árvore vazia')
-        if node.left:
-            self.inOrder(node.left, chave)
-        if chave:
-            print(node.chave)
-        else:
-            print(node.valor)
-        if node.right:
-            self.inOrder(node.right, chave)
-
-    def search(self, chave, node='root'):
-        node = self.root if node == 'root' else node
-        if self._isEmpty():
-            raise IndexError('Árvore vazia')
-        while node:
-            if chave == node.chave:
-                return node
-            if chave < node.chave:
-                node = node.left
-            elif chave > node.chave:
-                node = node.right
-        raise ValueError('Node não está na árvore')
-
-    def delete(self, chave, node='root'):
-        node = self.root if node == 'root' else node
-        if self._isEmpty():
-            raise IndexError('Árvore vazia')
-        elif node == None:
-            raise ValueError('Node não está na árvore')
-        elif chave < node.chave:
-            node.left = self.delete(chave, node.left)
-        elif chave > node.chave:
-            node.right = self.delete(chave, node.right)
-        elif node.chave == chave:
-            if node.isLeaf():
-                node = None
-                self.size -= 1
-                return
-            elif node.left == None:
-                node = node.right
-                self.size -= 1
-                return node
-            elif node.right == None:
-                node = node.left
-                self.size -= 1
-                return node
-            elif node.right and node.left:
-                root = False
-                if node == self.root:
-                    root = True                 
-                nMax = self._getMax(node.left)
-                node.chave = nMax.chave
-                node.valor = nMax.valor
-                node.left = self.delete(nMax.chave, node.left)
-                if root:
-                    self.root = node
-                return node
-        self._checkBalance(node)
-        return node
-
-    def inserirLista(self, lista):
-        for i in lista:
-            self.insert(i)
-

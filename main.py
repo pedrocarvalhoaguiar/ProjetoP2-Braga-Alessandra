@@ -6,3 +6,4 @@ root.withdraw()
 if __name__ == '__main__':
     controlador = Controlador()
     controlador.gerenciador.gerBiometria.compararBiometria(filedialog.askopenfilename())
+    

@@ -10,19 +10,20 @@ class GerenciadorPrincipal():
     def __init__(self):
         self.gerVacina = GerenciadorVacina()
         self.gerUsuario = GerenciadorUsuario()
-        self.gerPesoas = GerenciadorPessoas()
+        self.gerPessoas = GerenciadorPessoas()
         self.gerBiometria = GerenciadorBiometria()
+        self.carregarDados()
 
     def carregarDados(self):
         self.gerBiometria.carregarArvore()
         self.gerUsuario.carregarArvore()
         self.gerVacina.carregarArvore()
         self.gerPessoas.carregarArvore()
-    
+
     def salvarVacina(self):
         pass
 
-    def procurarPessoaCPF(self):
+    def procurarPessoaCPF(self, chave, nome, novoNome):
         pass
 
     def obterListaVacinadosCPF(self):
@@ -48,17 +49,21 @@ class GerenciadorBiometria():
     def __init__(self):
         self.arvoreBiometrias = AVL()
         self.biometria = Bio()
-        self.carregarArvore()
+        self.__carregarArvore()
 
     def cadastrarBiometria(self):
-        self.biometria.criar('_')
-        return  self.biometria.somaTotal
+        biometria = self.biometria.criar('_')
+        self.arvoreBiometrias.insert(biometria)
+        return  biometria
 
     def pegarNomes(self):
         nomes = [".".join(f.split(".")[:-1]) for f in listdir(path=BIO) if f.endswith('.json')]
         return nomes
 
-    def carregarArvore(self):
+    def criarBiometria(self):
+        return self.biometria.criar()
+
+    def __carregarArvore(self):
         nomes = self.pegarNomes()
         self.arvoreBiometrias.inserirLista(nomes)
 
@@ -137,4 +142,5 @@ class GerenciadorVacina():
     pass    
 
 class Vacina():
+
     pass
