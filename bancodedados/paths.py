@@ -1,8 +1,7 @@
 BIO = './bancodedados/biometrias/'
-USU = './bancodedados/usuarios/'
-VACCPF = './bancodedados/pessoas/cpf/'
-VACBIO = './bancodedados/pessoas/biometria/'
-VACI = './bancodedados/vacinas/'
+VACCPF = './bancodedados/pessoas/cpf/pessoas.json'
+VACBIO = './bancodedados/pessoas/biometria/pessoas.json'
+VACI = './bancodedados/vacinas/vacinas.json'
 from os.path import basename
 def nameFromPath(path):
     nomeArquivo = basename(path)

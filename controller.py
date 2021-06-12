@@ -8,7 +8,7 @@ class Controlador():
         self.interface = Interface()
         self.gerenciador = GerenciadorPrincipal()
 
-    def iniciar(self):
+    def menuPrincipal(self):
         while True:
             opcaoMenu = (self.interface.menuPrincipal())
             if (opcaoMenu == "1"):
@@ -20,7 +20,7 @@ class Controlador():
             elif opcaoMenu == "4":
                 self.buscar()
             elif opcaoMenu == "5":
-                self.sair()
+                self.interface.saindodosistema()
                 break
             else:
                 self.interface.opcaoInvalida()
@@ -32,7 +32,7 @@ class Controlador():
         self.interface.cadastrosucesso()
 
     def moradornormal(self):
-        nome, idade, endereco, CPF = self.interface.cadastromoradornormal()
+        nome, idade, endereco, cpf = self.interface.cadastromoradornormal()
         self.interface.cadastrando()
         self.interface.cadastrosucesso()
 
@@ -57,10 +57,5 @@ class Controlador():
             self.interface.procurando()
         else:
             self.interface.opcaoInvalida()
-
-    def sair(self):
-        self.interface.saindodosistema()
-
-
 
 

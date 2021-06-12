@@ -1,9 +1,9 @@
 from controller import Controlador
-import tkinter as tk
-from tkinter import filedialog
-root = tk.Tk()
-root.withdraw()
+from model import *
 if __name__ == '__main__':
     controlador = Controlador()
-    controlador.gerenciador.gerBiometria.compararBiometria(filedialog.askopenfilename())
-    
+    pessoa1 = PessoaCPF('za', 1, cpf='123')
+    pessoa2 = PessoaCPF('z33', 1, cpf='131')
+
+    controlador.gerenciador.gerPessoas.cadastrarPessoa(pessoa1)
+    controlador.gerenciador.gerPessoas.cadastrarPessoa(pessoa2)

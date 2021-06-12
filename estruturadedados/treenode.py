@@ -16,3 +16,10 @@ class TreeNode():
 
     def __repr__(self):
         return self.__str__()
+
+    def __iter__(self):
+        yield self
+        if self.left:
+            yield from self.left
+        if self.right:
+            yield from self.right

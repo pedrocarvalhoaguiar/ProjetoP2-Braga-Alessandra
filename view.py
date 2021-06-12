@@ -1,4 +1,8 @@
 from time import sleep
+import tkinter as tk
+from tkinter import filedialog
+root = tk.Tk()
+root.withdraw()
 
 class Interface():
     def inicializaInterface(self):
@@ -7,75 +11,75 @@ class Interface():
 
     def menuPrincipal(self):
         print("\n---- BEM VINDO ----\n")
-        print('[1] - Cadastro de moradores de rua')
-        print('[2] - Cadastro de moradores')
-        print('[3] - Cadastro de vacinas')
-        print('[4] - Buscar')
+        print('[1] - Cadastrar por biometria')
+        print('[2] - Cadastro por CPF')
+        print('[3] - Receber vacinas')
+        print('[4] - Buscar cadastro')
         print('[5] - Sair')
         op = self.leOpMenuPrincipal()
         return op
 
-    def cadastromoradorrua(self):
+    def menuBusca(self):
+        print("\n---- MENU DE BUSCA ----\n")
+        print('[1] - Buscar por Biometria')
+        print('[2] - Buscar por CPF')
+        print('[3] - Mostrar estoque de vacinas')
+        print('[4] - Mostrar todos moradores cadastrados')
+        print('[5] - Voltar ao menu principal')
+        print('[6] - Sair')
+        sleep(1)
+        op = self.leOpMenuPrincipal()
+        return op
+
+    def menuCadastrado(self):
+        print("\n---- MENU DO MORADOR ----\n")
+        print('[1] - Vacinar morador')
+        print('[2] - Alterar cadastro')
+        print('[3] - Excluir cadastro')
+        print('[4] - Voltar ao menu principal')
+        print('[5] - Sair')
+        op = self.leOpMenuPrincipal()
+        return op
+
+    def receberInfoBIO(self):
         print("\n---- CADASTRO DE MORADORES DE RUA ----\n")
         nome = input("Digite o nome: ")
         idade = input("Digite a idade: ")
         return nome, idade
 
-    def adicionandobiometria(self):
-        print("\nAdicione biometria...\n")
-        sleep(2)
-
-    def lendobiometria(self):
-        print("\nLendo biometria...\n")
-        sleep(2)
-
-    def cadastrosucesso(self):
-        print("\nCadastrado com sucesso!\n")
-        sleep(1)
-
-    def cadastromoradornormal(self):
+    def receberInfoCPF(self):
         print("\n---- CADASTRO DE MORADORES ----\n")
         nome = input("Digite o nome: ")
         idade = input("Digite a idade: ")
-        endereco = input("Digite o endereço: ")
-        CPF = input("Digite o número de CPF: ")
-        return nome, idade, CPF, endereco
+        cpf = input("Digite o número de CPF: ")
+        return nome, idade, cpf
 
-    def cadastrando(self):
-        print("\nCadastrando...")
-        sleep(2)
-
-    def cadastrovacina(self):
+    def receberInfoVacina(self):
         print("\n---- CADASTRO DE VACINAS ----\n")
-        nome = input("Digite o nome: ")
         fabricante = input("Informe o fabricante: ")
         lote = input("Informe o lote: ")
-        validade = input("Digite a data de validade: ")
-        return fabricante, lote, validade, nome
+        quantidade = input("Digite a quantidade: ")
+        return fabricante, lote, quantidade
 
-    def buscar(self):
-        print("\n---- MENU DE BUSCA ----\n")
-        print('[1] - Buscar morador normal')
-        print('[2] - Buscar morador de rua')
-        print('[3] - Buscar vacina')
-        print('[4] - Mostrar todos moradores cadastrados')
+    def buscarmoradorderua(self):
+        print("\n---- BUSCA MORADORES DE RUA ----\n")
+        caminhoArquivo = filedialog.askopenfilename()
         sleep(1)
-        op = self.leOpMenuPrincipal()
-        return op
+        return caminhoArquivo
 
-    def buscarmoradornormal(self):
+    def receberCPF(self):
         print("\n---- BUSCA MORADORES ----\n")
-        int(input('Informe o CPF: '))
+        cpf = input('Informe o CPF: ')
         sleep(1)
+        return cpf
+
+    def leOpMenuPrincipal(self):
+        op = input('Digite uma opção válida: ')
+        return op
 
     def procurando(self):
         print("\nProcurando no sistema...")
         sleep(2)
-
-    def buscarmoradorderua(self):
-        print("\n---- BUSCA MORADORES DE RUA ----\n")
-        int(input('Informe a biometria: '))
-        sleep(1)
 
     def buscarvacinas(self):
         print("\n---- BUSCA VACINAS ----\n")
@@ -90,14 +94,6 @@ class Interface():
         CPF = int(input("Digite o CPF: "))
         return CPF
 
-    def Biometria(self):
-        Bio = int(input("Digite o código de biometria: "))
-        return Bio
-
-    def leOpMenuPrincipal(self):
-        op = (input('Digite uma opção válida: '))
-        return op
-
     def opcaoInvalida(self):
         print("\n*---------------*")
         print('\nOpção inválida!')
@@ -109,5 +105,19 @@ class Interface():
     def saindodosistema(self):
         print("\nSaindo do sistema...")
         sleep(2)
-        return
 
+    def adicionandobiometria(self):
+        print("\nAdicione biometria...\n")
+        sleep(2)
+
+    def lendobiometria(self):
+        print("\nLendo biometria...\n")
+        sleep(2)
+
+    def cadastrosucesso(self):
+        print("\nCadastrado com sucesso!\n")
+        sleep(1)
+
+    def cadastrando(self):
+        print("\nCadastrando...")
+        sleep(2)

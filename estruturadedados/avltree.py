@@ -1,4 +1,5 @@
 from .treenode import TreeNode
+from .queue import Queue
 
 class AVL():
     
@@ -8,6 +9,7 @@ class AVL():
 
     def insert(self, chave, node='root', valor=None):
         node = self.root if node == 'root' else node
+        print(type(chave))
         newNode1 = TreeNode(chave, valor)
         if self._isEmpty():
             self.root = newNode1
@@ -207,3 +209,11 @@ class AVL():
         left = self._getHeight(node.left)
         right = self._getHeight(node.right)
         return max(left, right) + 1
+
+    def __iter__(self):
+        yield self.root
+        if self.root.left:
+            yield from self.root.left
+        if self.root.right:
+            yield from self.root.right
+
