@@ -16,7 +16,7 @@ class GerenciadorPrincipal():
         self.gerVacina.cadastrarVacina(vacina)
 
     def cadastrarPessoa(self, pessoa):
-        pass
+        self.gerPessoas.cadastrarPessoa(pessoa=pessoa)
 
     def retornarPessoa(self, chave, tipo):
         return self.gerPessoas.procurarPessoa(chave, tipo)
