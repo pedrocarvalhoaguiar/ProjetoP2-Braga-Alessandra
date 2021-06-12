@@ -5,7 +5,6 @@ from bancodedados.paths import *
 import json
 from os import listdir
 
-
 class GerenciadorPrincipal():
     
     def __init__(self):
@@ -32,7 +31,6 @@ class GerenciadorPessoas():
         self.arvorePessoasBiometria = AVL()
         self._carregarArvore(VACBIO)
         self._carregarArvore(VACCPF)
-        
 
     def _carregarArvore(self, caminho):
         arvore, tipoPessoa, lastAtt = self._chooseType(caminho)
@@ -109,25 +107,24 @@ class Pessoa:
     def __init__(self, nome, idade, dose=0, vacina=None):
         self.nome = nome
         self.idade = idade
-        self.dose = 0
-        self.vacina = vacina
+        self.dose = dose
+        self.vacina = self.setVacina(vacina)
 
     def isVac(self):
         if self.dose == 2:
             return True
         return False
 
-    @property
-    def vacina(self):
-        return self._vacina
-    
-    @vacina.setter
-    def vacina(self, valor):
-        if valor == None:
-            self._vacinda = 'Não vacinada'
-        else:
-            self._vacina = valor
+    def getNomeVacina(self):
+        if self.vacina == 'Não vacinada':
+            return self.vacina
+        return self.vacina.fabricante
 
+    def setVacina(self, valor):
+        if valor == None:
+            return 'Não vacinada'
+        else:
+            return valor
 
     def vacinar(self, vacina):
         self.dose += 1
@@ -138,15 +135,15 @@ class Pessoa:
 
 class PessoaCPF(Pessoa):
 
-    def __init__(self, nome, idade, dose=0, vacina=0, cpf=0):
+    def __init__(self, nome, idade, dose=0, vacina=None, cpf=0):
         super().__init__(nome, idade, dose, vacina)
-        self.cpf = cpf
+        self.cpf = cpf   
 
     def lineRegistry(self):
-        return {'nome': self.nome, 'idade': self.idade, 'vacina': self.vacina, 'dose': self.dose, 'cpf': self.cpf}
+        return {'nome': self.nome, 'idade': self.idade, 'vacina': self.getNomeVacina(), 'dose': self.dose, 'cpf': self.cpf}
 
 class PessoaBiometria(Pessoa):
-    def __init__(self, nome, idade, dose=0, vacina=0, biom=0):
+    def __init__(self, nome, idade, dose=0, vacina=None, biom=0):
         super().__init__(nome, idade, dose, vacina)
         self.biometria = biom
 
@@ -154,7 +151,7 @@ class PessoaBiometria(Pessoa):
         self.biometria = biometria
 
     def lineRegistry(self):
-        return {'nome': self.nome, 'idade': self.idade, 'vacina': self.vacina, 'dose': self.dose, 'biometria': self.biometria}
+        return {'nome': self.nome, 'idade': self.idade, 'vacina': self.getNomeVacina(), 'dose': self.dose, 'biometria': self.biometria}
 
 class GerenciadorBiometria():
 
@@ -282,18 +279,6 @@ class Vacina:
         if self.quantidade == 0:
             return False
         return True
-
-    @property
-    def fabricantes(self):
-        return self._fabricantes
-
-    @property
-    def lote(self):
-        return self._lote
-
-    @property
-    def quantidade(self):
-        return self._quantidade
 
     def lineRegistry(self):
         return {'fabricante': self.fabricante, 'lote': self.lote, 'quantidade': self.quantidade}
