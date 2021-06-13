@@ -3,7 +3,7 @@ from estruturadedados.queue import Queue
 from biometria.biometria import Biometria as Bio
 from bancodedados.paths import *
 import json
-from os import listdir
+from os import listdir, remove
 
 class GerenciadorPrincipal():
     
@@ -21,8 +21,39 @@ class GerenciadorPrincipal():
     def retornarPessoa(self, chave, tipo):
         return self.gerPessoas.procurarPessoa(chave, tipo)
 
-    def obterListaVacinadosCPF(self):
-        self.gerPessoas.obterListaPessoasCPF()
+    def retornarBioNova(self):
+        return self.gerBiometria.cadastrarBiometria()
+
+    def vacinarPessoa(self, pessoa, vacina):
+        self.gerPessoas.vacinarPessoa(pessoa, vacina)
+        self.gerVacina.diminuirEstoque(vacina.lote)
+
+    def retornarVacinaValida(self, fab=None):
+        vacina = self.gerVacina.getVacina(fab=fab)
+        return vacina
+
+    def retornarPessoaBio(self, path):
+        nomeBio = self.gerBiometria.compararBiometria(path)
+        if nomeBio:
+            pessoaB = self.retornarPessoa(nomeBio, 'bio')
+            return pessoaB
+        return False
+
+    def excluirCadastro(self, pessoa):
+        self.gerPessoas.excluirPessoa(pessoa)
+        try:
+            self.gerBiometria.excluirBiometria(pessoa.biometria)
+        except:
+            pass
+
+    def retornarArvoreVacinas(self):
+        return self.gerVacina.arvoreVacinas
+
+    def retornarArvoreCPF(self):
+        return self.gerPessoas.arvorePessoasCPF
+
+    def retornarArvoreBio(self):
+        return self.gerPessoas.arvorePessoasBiometria
 
 class GerenciadorPessoas():
     
@@ -45,10 +76,6 @@ class GerenciadorPessoas():
             with open(f'{caminho}', 'w') as f:
                 data = {}
                 json.dump(data, f, indent=4, ensure_ascii=False)
-    
-    def alterarAtributo(self, pessoa, novaPessoa):
-        self.excluirPessoa(pessoa)
-        self.salvarPessoa(novaPessoa)
         
     def cadastrarPessoa(self, pessoa):
         arvore, chave, caminho = self._chooseArvore(pessoa=pessoa)
@@ -63,7 +90,7 @@ class GerenciadorPessoas():
         arvore, chave, caminho = self._chooseArvore(pessoa=pessoa)
         pArvore = arvore.search(chave)
         pArvore.valor.dose += 1
-        pArvore.valor.vacina = vacina
+        pArvore.valor.setVacina(vacina.fabricante)
         with open(f'{caminho}', 'r+', encoding='UTF-8') as nomeArquivo:
             listaPessoas = json.load(nomeArquivo)
             p = listaPessoas[chave]
@@ -74,11 +101,15 @@ class GerenciadorPessoas():
 
     def excluirPessoa(self, pessoa):
         arvore, chave, caminho = self._chooseArvore(pessoa=pessoa)
-        arvore.delete(chave)
+        print(arvore, chave, caminho)
+        print(arvore.delete(chave))
+        print(arvore.root, 4)
         with open(f'{caminho}', 'r+', encoding='UTF-8') as nomeArquivo:
             listaPessoas = json.load(nomeArquivo)
             listaPessoas.pop(chave)
-            nomeArquivo.seek(0)
+            print(listaPessoas, 2)
+        with open(f'{caminho}', 'w', encoding='UTF-8') as nomeArquivo:
+            print(listaPessoas, 1)
             json.dump(listaPessoas, nomeArquivo, indent=4, ensure_ascii=False)
 
     def procurarPessoa(self, chave, tipo):
@@ -116,19 +147,15 @@ class Pessoa:
         return False
 
     def getNomeVacina(self):
-        if self.vacina == 'Não vacinada':
+        if self.vacina == 'N/A':
             return self.vacina
-        return self.vacina.fabricante
+        return self.vacina
 
     def setVacina(self, valor):
         if valor == None:
-            return 'Não vacinada'
+            return 'N/A'
         else:
             return valor
-
-    def vacinar(self, vacina):
-        self.dose += 1
-        self.vacina = vacina
 
     def __repr__(self):
         return f'Nome:{self.nome}, idade: {self.idade}, dose: {self.dose}'
@@ -161,8 +188,8 @@ class GerenciadorBiometria():
 
     def cadastrarBiometria(self):
         biometria = Bio.criar('_')
-        self.arvoreBiometrias.insert(biometria)
-        return  biometria
+        self.arvoreBiometrias.insert(str(biometria))
+        return biometria
 
     def compararBiometria(self, path):
         nome = nameFromPath(path)
@@ -173,12 +200,17 @@ class GerenciadorBiometria():
             biometriaBD = Bio.leArquivo(biometriaBD.chave)
             arvoreTeste = self._carregarArvoreTeste(biometriaTeste)
             arvoreBD = self._carregarArvoreTeste(biometriaBD)
-            return print(self._igual(arvoreBD.root, arvoreTeste.root))
-        return print(False)
+            if self._igual(arvoreBD.root, arvoreTeste.root):
+                return nome
+        return False
 
     def _pegarNomes(self):
         nomes = [".".join(f.split(".")[:-1]) for f in listdir(path=BIO) if f.endswith('.json')]
         return nomes
+
+    def excluirBiometria(self, nome):
+        remove(f'{BIO}{nome}.json')
+        self.arvoreBiometrias.delete(nome)
 
     def _carregarArvore(self):
         nomes = self._pegarNomes()
@@ -219,12 +251,11 @@ class GerenciadorBiometria():
             if pos1.left and pos2.left:
                 fila1.push(pos1.left)
                 fila2.push(pos2.left)
-            elif pos1.left or pos2.right:
+            elif pos1.left or pos2.left:
                 return False
             if pos1.right and pos2.right:
                 fila1.push(pos1.right)
                 fila2.push(pos2.right)
-            elif pos1.right or pos2.right:
                 return False
         return True
 
@@ -232,16 +263,18 @@ class GerenciadorVacina():
 
     def __init__(self):
         self.arvoreVacinas = AVL()
+        self.estoque = 0
         self._carregarArvore()
 
     def _carregarArvore(self):
         try:
             with open(f'{VACI}', 'r', encoding='UTF-8') as nomeArquivo:
                 listaVacinas = json.load(nomeArquivo)
-                for k, v in listaVacinas:
+                for k, v in listaVacinas.items():
                     if v['quantidade'] == 0:
                         continue
                     vacina = Vacina(v['fabricante'], v['lote'], v['quantidade'])
+                    self.setEstoque(v['quantidade'])
                     self.arvoreVacinas.insert(k, valor=vacina)
         except:
             with open(f'{VACI}', 'w', encoding='UTF-8') as nomeArquivo:
@@ -249,7 +282,8 @@ class GerenciadorVacina():
                 json.dump(data, nomeArquivo, indent=4, ensure_ascii=False)
     
     def cadastrarVacina(self, vacina):
-        self.arvoreVacinas.insert(vacina.lote, vacina)
+        self.arvoreVacinas.insert(vacina.lote, valor=vacina)
+        self.setEstoque(vacina.quantidade)
         with open(f'{VACI}', 'r+', encoding='UTF-8') as nomeArquivo:
             listaVacinas = json.load(nomeArquivo)
             listaVacinas[f'{vacina.lote}'] = vacina.lineRegistry()
@@ -258,15 +292,36 @@ class GerenciadorVacina():
 
     def diminuirEstoque(self, lote):
         vacina = self.arvoreVacinas.search(lote)
-        vacina.valor.quantidade -= 1
-        if not vacina.temVacina():
+        vacina.valor.setQuantidade(1)
+        self.setEstoque(1)
+        if not vacina.valor.temVacina():
             self.arvoreVacinas.delete(lote)
         with open(f'{VACI}', 'r+', encoding='UTF-8') as nomeArquivo:
             listaVacinas = json.load(nomeArquivo)
-            vacina = listaVacinas['lote']
-            vacina['quantidade'] -=1
+            vacina = listaVacinas[lote]
+            vacina['quantidade'] -= 1
             nomeArquivo.seek(0)
             json.dump(listaVacinas, nomeArquivo, indent=4, ensure_ascii=False)
+
+    def getVacina(self, fab=None):
+        if self.arvoreVacinas.isEmpty():
+            return None
+        if fab == 'N/A':
+            return self.arvoreVacinas.root.valor
+        for vacina in self.arvoreVacinas:            
+            if vacina.valor.fabricante == fab and vacina.valor.temVacina():
+                return vacina.valor
+
+    def retornarEstoque(self):
+        return self.estoque
+
+    def setEstoque(self, qnt):
+        if qnt > 0:
+            self.estoque += qnt
+        elif qnt < 0:
+            self.estoque -= qnt
+        else:
+            self.estoque = 0
 
 class Vacina:
 
@@ -275,6 +330,14 @@ class Vacina:
         self.lote = lote
         self.quantidade = quantidade
     
+    def setQuantidade(self, qnt):
+        if qnt > 0:
+            self.quantidade += qnt
+        elif qnt < 0:
+            self.quantidade -= qnt
+        else:
+            self.quantidade = 0
+
     def temVacina(self):
         if self.quantidade == 0:
             return False

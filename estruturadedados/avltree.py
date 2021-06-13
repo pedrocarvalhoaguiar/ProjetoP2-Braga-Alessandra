@@ -9,9 +9,8 @@ class AVL():
 
     def insert(self, chave, node='root', valor=None):
         node = self.root if node == 'root' else node
-        print(type(chave))
         newNode1 = TreeNode(chave, valor)
-        if self._isEmpty():
+        if self.isEmpty():
             self.root = newNode1
             node = self.root
             self.size +=1
@@ -33,7 +32,7 @@ class AVL():
 
     def inOrder(self, node='root', chave=False):
         node = self.root if node == 'root' else node
-        if self._isEmpty():
+        if self.isEmpty():
             raise IndexError('Árvore vazia')
         if node.left:
             self.inOrder(node.left, chave)
@@ -46,7 +45,7 @@ class AVL():
 
     def search(self, chave, node='root'):
         node = self.root if node == 'root' else node
-        if self._isEmpty():
+        if self.isEmpty():
             raise IndexError('Árvore vazia')
         while node:
             if chave == node.chave:
@@ -59,7 +58,7 @@ class AVL():
 
     def delete(self, chave, node='root'):
         node = self.root if node == 'root' else node
-        if self._isEmpty():
+        if self.isEmpty():
             raise IndexError('Árvore vazia')
         elif node == None:
             raise ValueError('Node não está na árvore')
@@ -71,6 +70,8 @@ class AVL():
             if node.isLeaf():
                 node = None
                 self.size -= 1
+                if chave == self.root.chave:
+                    self.root = None
                 return
             elif node.left == None:
                 node = node.right
@@ -197,7 +198,7 @@ class AVL():
                 return node
             node = node.right 
 
-    def _isEmpty(self):
+    def isEmpty(self):
         if self.root == None:
             return True
         return False
@@ -211,9 +212,9 @@ class AVL():
         return max(left, right) + 1
 
     def __iter__(self):
-        yield self.root
         if self.root.left:
             yield from self.root.left
+        yield self.root
         if self.root.right:
             yield from self.root.right
 
