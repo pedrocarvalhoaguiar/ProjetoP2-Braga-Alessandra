@@ -95,10 +95,13 @@ class Controlador():
         pathBio = self.interface.lerBiometria()
         try:
             pessoaB = self.gerenciador.retornarPessoaBio(pathBio)
-            self.menuCadastrado(pessoaB)
+            if pessoaB:
+                self.menuCadastrado(pessoaB)
+            else:
+            self.menuBusca()
         except IndexError:
             self.interface.semMoradores('BIOMETRIA')
-        self.menuBusca()
+            self.menuBusca()
 
     def buscarCPF(self):
         self.interface.procurando()
@@ -108,9 +111,10 @@ class Controlador():
             self.menuCadastrado(pessoaC)
         except ValueError:
             self.interface.cpfInvalido()
+            self.menuBusca()
         except IndexError:
             self.interface.semMoradores('CPF')
-        self.menuBusca()
+            self.menuBusca()
         
     def mostrarEstoque(self):
         self.interface.procurando()
