@@ -172,3 +172,6 @@ class Interface():
         print('\n------ DADOS DO MORADOR -----')
         print(f'{morador}')
         print('---- Excluído com sucesso! ----')
+
+    def alteradoComSucesso(self):
+        print('---- Alterado com sucesso! ----')

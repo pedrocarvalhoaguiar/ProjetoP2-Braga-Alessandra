@@ -101,15 +101,11 @@ class GerenciadorPessoas():
 
     def excluirPessoa(self, pessoa):
         arvore, chave, caminho = self._chooseArvore(pessoa=pessoa)
-        print(arvore, chave, caminho)
-        print(arvore.delete(chave))
-        print(arvore.root, 4)
+        arvore.delete(chave)
         with open(f'{caminho}', 'r+', encoding='UTF-8') as nomeArquivo:
             listaPessoas = json.load(nomeArquivo)
             listaPessoas.pop(chave)
-            print(listaPessoas, 2)
         with open(f'{caminho}', 'w', encoding='UTF-8') as nomeArquivo:
-            print(listaPessoas, 1)
             json.dump(listaPessoas, nomeArquivo, indent=4, ensure_ascii=False)
 
     def procurarPessoa(self, chave, tipo):
@@ -256,6 +252,7 @@ class GerenciadorBiometria():
             if pos1.right and pos2.right:
                 fila1.push(pos1.right)
                 fila2.push(pos2.right)
+            elif pos1.right or pos2.right:
                 return False
         return True
 

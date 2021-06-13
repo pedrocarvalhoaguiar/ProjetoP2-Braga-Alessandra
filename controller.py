@@ -41,7 +41,6 @@ class Controlador():
             elif buscarSec == "5":
                 self.menuPrincipal()
             elif buscarSec =="6":
-                self.interface.saindodosistema()
                 return True
             else:
                 self.interface.opcaoInvalida()
@@ -94,8 +93,6 @@ class Controlador():
     def buscarBiometria(self):
         self.interface.procurando()
         pathBio = self.interface.lerBiometria()
-        print(pathBio)
-        print(self.gerenciador.gerBiometria.arvoreBiometrias.root)
         try:
             pessoaB = self.gerenciador.retornarPessoaBio(pathBio)
             self.menuCadastrado(pessoaB)
