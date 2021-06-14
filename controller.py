@@ -44,8 +44,8 @@ class Controlador():
                 self.interface.opcaoInvalida()
 
     def menuCadastrado(self, pessoa):
-        self.interface.mostrarCadastrado(pessoa)
         while True:
+            self.interface.mostrarCadastrado(pessoa)
             opTer = self.interface.menuCadastrado()
             if opTer == '1':
                 self.vacinarPessoa(pessoa)

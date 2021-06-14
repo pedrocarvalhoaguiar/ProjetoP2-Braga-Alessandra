@@ -5,10 +5,7 @@ root = tk.Tk()
 root.withdraw()
 
 class Interface():
-    def inicializaInterface(self):
-        print("Inicializando Sistema...")
-        sleep(1)
-
+    
     def linhaDupla(self):
         print("====================================\n")
     def linhaAster(self):
@@ -158,6 +155,7 @@ class Interface():
         self.linhaDupla()
 
     def pessoaVacinada(self):
+        self.linhaDupla()
         print('| >>>    USUÁRIO JÁ VACINADO   <<< |')
         self.linhaDupla()
 
