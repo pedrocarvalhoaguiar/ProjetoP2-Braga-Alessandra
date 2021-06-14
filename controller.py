@@ -17,10 +17,7 @@ class Controlador():
             elif opcaoMenu == "3":
                 self.cadastroVacina()
             elif opcaoMenu == "4":
-                t = self.menuBusca()
-                if t == True:
-                    self.interface.saindodosistema()
-                    break
+                self.menuBusca()
             elif opcaoMenu == "5":
                 self.interface.saindodosistema()
                 break
@@ -41,7 +38,8 @@ class Controlador():
             elif buscarSec == "5":
                 self.menuPrincipal()
             elif buscarSec =="6":
-                return True
+                self.interface.saindodosistema()
+                quit()
             else:
                 self.interface.opcaoInvalida()
 
@@ -53,35 +51,42 @@ class Controlador():
                 self.vacinarPessoa(pessoa)
             elif opTer == '2':
                 self.alterarPessoa(pessoa)
-                self.menuBusca()
             elif opTer == '3':
                 self.excluirCadastro(pessoa)
                 self.menuBusca()
             elif opTer == '4':
                 self.menuBusca()
             elif opTer == '5':
-                return True
+                self.interface.saindodosistema()
+                quit()
+            else:
+                self.interface.opcaoInvalida()
 
-    def cadastroBIO(self):
+    def cadastroBIO(self, novaPessoa=None):
         bio = self.gerenciador.gerBiometria.cadastrarBiometria()
         nome, idade = self.interface.receberInfoBIO()
         pessoaBio = PessoaBiometria(nome, idade, biom=str(bio))
-        self.gerenciador.cadastrarPessoa(pessoaBio)
         self.interface.adicionandobiometria()
         self.interface.lendobiometria()
-        self.interface.cadastrosucesso()
-        return pessoaBio
+        if not novaPessoa:
+            self.gerenciador.cadastrarPessoa(pessoaBio)
+            self.interface.cadastrosucesso()
+        else:
+            return pessoaBio
 
-    def cadastroCPF(self):
+    def cadastroCPF(self, novaPessoa=None):
         nome, idade, cpf = self.interface.receberInfoCPF()
         pessoaCPF = PessoaCPF(nome, idade, cpf=cpf)
         try:
-            self.gerenciador.cadastrarPessoa(pessoaCPF)
-            self.interface.cadastrando()
-            self.interface.cadastrosucesso()
-            return pessoaCPF
+            if not novaPessoa:
+                self.gerenciador.cadastrarPessoa(pessoaCPF)
+                self.interface.cadastrando()
+                self.interface.cadastrosucesso()
+            else:
+                return pessoaCPF
         except ValueError:
             self.interface.cpfInvalido()
+
 
     def cadastroVacina(self):
         fabricante, lote, quantidade = self.interface.receberInfoVacina()
@@ -95,10 +100,14 @@ class Controlador():
         pathBio = self.interface.lerBiometria()
         try:
             pessoaB = self.gerenciador.retornarPessoaBio(pathBio)
-            self.menuCadastrado(pessoaB)
+            if pessoaB:
+                self.menuCadastrado(pessoaB)
+            else:
+                self.interface.bioInvalida()
+                self.menuBusca()
         except IndexError:
             self.interface.semMoradores('BIOMETRIA')
-        self.menuBusca()
+            self.menuBusca()
 
     def buscarCPF(self):
         self.interface.procurando()
@@ -108,9 +117,10 @@ class Controlador():
             self.menuCadastrado(pessoaC)
         except ValueError:
             self.interface.cpfInvalido()
+            self.menuBusca()
         except IndexError:
             self.interface.semMoradores('CPF')
-        self.menuBusca()
+            self.menuBusca()
         
     def mostrarEstoque(self):
         self.interface.procurando()
@@ -118,10 +128,12 @@ class Controlador():
         if vacinas.isEmpty():
             self.interface.estoqueVazio()
         else:
+            self.interface.tituloMostrarVacina()
             for vacina in vacinas:
                 if vacina.valor.temVacina():
                     self.interface.mostrarVacina(vacina.valor)
-                    self.menuBusca()
+            self.interface.linhaDupla()
+            self.menuBusca()
 
     def mostrarCadastrados(self):
         self.interface.carregando()
@@ -154,18 +166,23 @@ class Controlador():
         while True:
             op = self.interface.refazerCadastro(pessoa)
             if op == '1':
-                self.cadastroBIO()
-                self.excluirCadastro(pessoa)
+                novaPessoa = self.cadastroBIO(novaPessoa=True)
+                novaPessoa.dose, novaPessoa.vacina = pessoa.dose, pessoa.vacina
+                self.gerenciador.cadastrarPessoa(novaPessoa)
+                self.gerenciador.excluirCadastro(pessoa)
                 self.interface.alteradoComSucesso()
+                self.menuCadastrado(pessoa)
             elif op == '2':
-                self.cadastroCPF()
-                self.excluirCadastro(pessoa)
+                novaPessoa = self.cadastroCPF(novaPessoa=True)
+                novaPessoa.dose, novaPessoa.vacina = pessoa.dose, pessoa.vacina
+                self.gerenciador.cadastrarPessoa(novaPessoa)
+                self.gerenciador.excluirCadastro(pessoa)
                 self.interface.alteradoComSucesso()
+                self.menuCadastrado(pessoa)
             elif op == '3':
                 self.menuCadastrado(pessoa)
             else:
                 self.interface.opcaoInvalida()
-                break
 
     def excluirCadastro(self, pessoa):
         self.gerenciador.excluirCadastro(pessoa)

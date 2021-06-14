@@ -57,7 +57,10 @@ class AVL():
         raise ValueError('Node não está na árvore')
 
     def delete(self, chave, node='root'):
+        root = False
         node = self.root if node == 'root' else node
+        if node == self.root:
+            root = True 
         if self.isEmpty():
             raise IndexError('Árvore vazia')
         elif node == None:
@@ -70,21 +73,19 @@ class AVL():
             if node.isLeaf():
                 node = None
                 self.size -= 1
-                if chave == self.root.chave:
-                    self.root = None
-                return
             elif node.left == None:
                 node = node.right
+                if root:
+                    self.root = node
                 self.size -= 1
                 return node
             elif node.right == None:
                 node = node.left
+                if root:
+                    self.root = node
                 self.size -= 1
                 return node
-            elif node.right and node.left:
-                root = False
-                if node == self.root:
-                    root = True                 
+            elif node.right and node.left:                
                 nMax = self._getMax(node.left)
                 node.chave = nMax.chave
                 node.valor = nMax.valor
@@ -217,4 +218,3 @@ class AVL():
         yield self.root
         if self.root.right:
             yield from self.root.right
-

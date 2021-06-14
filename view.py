@@ -6,161 +6,183 @@ root.withdraw()
 
 class Interface():
     def inicializaInterface(self):
-        print("\nInicializando Sistema...")
+        print("Inicializando Sistema...")
         sleep(1)
 
+    def linhaDupla(self):
+        print("====================================\n")
+    def linhaAster(self):
+        print("************************************")
+
     def menuPrincipal(self):
-        sleep(1)
-        print("\n---- BEM VINDO ----\n")
+        print("************************************")
+        print('***         BEM VINDO            ***')
+        print("************************************\n")
         print('[1] - Cadastrar por Biometria')
         print('[2] - Cadastrar por CPF')
-        print('[3] - Cadastrar vacinas')
-        print('[4] - Buscar cadastro')
+        print('[3] - Cadastrar Vacinas')
+        print('[4] - Pesquisar Cadastro/Vacina')
         print('[5] - Sair')
         op = self.leOpMenuPrincipal()
         return op
 
     def menuBusca(self):
-        sleep(1)
-        print("---- MENU DE BUSCA ----\n")
-        print('[1] - Buscar por Biometria')
-        print('[2] - Buscar por CPF')
-        print('[3] - Mostrar estoque de vacinas')
-        print('[4] - Mostrar todos moradores cadastrados')
+        print("\n************************************")
+        print("***      OPÇÕES DE PESQUISA      ***")
+        print("************************************")
+        print('[1] - Pesquisar por Biometria')
+        print('[2] - Pesquisar por CPF')
+        print('[3] - Exibir estoque de vacinas')
+        print('[4] - Exibir cadastrados')
         print('[5] - Voltar ao menu principal')
         print('[6] - Sair')
         op = self.leOpMenuPrincipal()
         return op
 
     def menuCadastrado(self):
-        print("\n---- MENU DO MORADOR ----\n")
-        print('[1] - Vacinar morador')
+        self.linhaAster()
+        print("***      ESCOLHA UMA OPÇÃO      ***")
+        self.linhaAster()
+        print('[1] - Vacinar')
         print('[2] - Alterar cadastro')
         print('[3] - Excluir cadastro')
-        print('[4] - Voltar ao menu principal')
+        print('[4] - Voltar ao menu anterior')
         print('[5] - Sair')
         op = self.leOpMenuPrincipal()
         return op
 
     def receberInfoBIO(self):
-        print("\n---- CADASTRO DE MORADORES DE RUA ----\n")
+        print("************************************")
+        print("***     CADASTRO DE BIOMETRIA    ***")
+        print("************************************")
         nome = input("Digite o nome: ")
         idade = input("Digite a idade: ")
         return nome, idade
 
     def receberInfoCPF(self):
-        print("\n---- CADASTRO DE MORADORES ----\n")
+        print("************************************")
+        print("***       CADASTRO DE CPF       ***")
+        print("************************************")
         nome = input("Digite o nome: ")
         idade = input("Digite a idade: ")
         cpf = input("Digite o número de CPF: ")
         return nome, idade, cpf
 
     def receberInfoVacina(self):
-        print("\n---- CADASTRO DE VACINAS ----\n")
+        print("************************************")
+        print("***       CADASTRA VACINA        ***")
+        print("************************************")
         fabricante = input("Informe o fabricante: ")
         lote = input("Informe o lote: ")
         quantidade = input("Digite a quantidade: ")
         return fabricante, lote, quantidade
 
     def lerBiometria(self):
-        print("---- BUSCA MORADORES DE RUA ----\n")
+        print("************************************")
+        print("***    PESQUISA POR BIOMETRIA    ***")
+        print("************************************\n")
+        print(">>> SELECIONE O ARQUIVO DA BIOMETRIA")
         caminhoArquivo = filedialog.askopenfilename()
         return caminhoArquivo
 
     def lerCPF(self):
-        print("\n---- BUSCA MORADORES ----\n")
+        self.linhaAster()
+        print("***    PESQUISA POR CPF    ***")
+        self.linhaAster()
         cpf = input('Informe o CPF: ')
         sleep(1)
         return cpf
 
     def leOpMenuPrincipal(self):
-        op = input('\nDigite uma opção válida: ')
+        op = input('\n>>> Digite uma opção válida: ')
         return op
 
     def procurando(self):
-        print("\nProcurando no sistema...")
+        print(">>> Procurando no sistema...\n")
         sleep(1)
 
     def carregando(self):
-        print("\nCarregando lista...\n")
+
+        print(">>> Carregando lista...\n")
         sleep(1)
 
     def opcaoInvalida(self):
-        print("*---------------*")
-        print('Opção inválida!')
-        print("*---------------*\n")
+        print('\n| >>>     OPÇÃO INVÁLIDA!      <<< |')
+        self.linhaDupla()
 
     def bioInvalida(self):
-        print("*---------------*")
-        print('Biometria inválida!')
-        print("*---------------*\n")
+        print('\n| >>>   BIOMETRIA INVÁLIDA!    <<< |')
+        self.linhaDupla()
 
     def cpfInvalido(self):
-        print("*---------------*")
-        print('CPF inválida!')
-        print("*---------------*\n")
+        print('\n| >>>     CPF INVÁLIDO!        <<< |')
+        self.linhaDupla()
 
     def usuNaoEncontrado(self):
-        print('Usuário não encontrado!')
+        print('| >>>  USUÁRIO NÃO ENCONTRADO! <<< |')
+        self.linhaDupla()
 
     def saindodosistema(self):
-        print("Saindo do sistema...\n")
-        sleep(2)
+        print(">>> Saindo do sistema...\n")
+        self.linhaDupla()
+        sleep(1)
 
     def adicionandobiometria(self):
-        print("Adicione biometria...\n")
+        print(">>> ADICIONANDO BIOMETRIA...")
         sleep(1)
 
     def lendobiometria(self):
-        print("Lendo biometria...\n")
+        print(">>> LENDO BIOMETRIA...")
         sleep(1)
 
     def cadastrosucesso(self):
-        print("Cadastrado com sucesso!\n")
+        print(">>> CADASTRADO EFETUADO COM SUCESSO!")
+        self.linhaDupla()
         sleep(1)
 
     def cadastrando(self):
-        print("Cadastrando...\n")
+        print(">>> CADASTRANDO...")
         sleep(1)
 
+    def tituloMostrarVacina(self):
+        self.linhaAster()
+        print("***       VACINA EM ESTOQUE      ***")
+        self.linhaAster()
+
     def mostrarVacina(self, vacina):
-        print("----- VACINA EM ESTOQUE -----\n")
-        print(f'{vacina}\n')
-        print("---------------")
+        print(f'{vacina}')
+        print('|')
 
     def estoqueVazio(self):
-        print("*---------------*")
-        print("Estoque Vazio")
-        print("*---------------*")
+        print('| >>>   ESTOQUE VAZIO    <<< |')
+        self.linhaDupla()
 
     def pessoaVacinada(self):
-        print("*---------------*")
-        print('Você já está vacinado!')
-        print("*---------------*\n")
+        print('| >>>    USUÁRIO JÁ VACINADO   <<< |')
+        self.linhaDupla()
 
     def vacinadoComSucesso(self):
-        print("*---------------*")
-        print('Vacinado com sucesso!')
-        print("*---------------*\n")
+        print('\n >>> Vacinado com sucesso!')
+        self.linhaDupla()
 
     def semMoradores(self, tipo):
-        print("*---------------*")
-        print(f'Não há moradores cadastrados por {tipo}!')
-        print("*---------------*\n")
+        print(f'| >>>  NÃO HÁ CADASTROS POR {tipo}! <<< |')
+        self.linhaDupla()
 
     def mostrarMoradores(self, arvoreMoradores, tipo, qnt):
-        print(f'{qnt} morador(es) cadastrado(s) por {tipo}')
+        print(f'| >>> {qnt} morador(es) cadastrado(s) por {tipo}')
         for morador in arvoreMoradores:
             print(f'{morador}')
-            print("*---------------*\n")
+            self.linhaDupla()
 
     def mostrarCadastrado(self, morador):
         print(f'\n{morador}')
-        print("*---------------*")
+        self.linhaDupla()
 
     def refazerCadastro(self, morador):
-        print("\n----- RECADASTRAMENTO -----")
-        print('------ DADOS DO MORADOR -----\n')
+        self.linhaAster()
+        print("***       ALTERAR CADASTRO       ***")
+        self.linhaAster()
         print(f'{morador}\n')
         print('[1] - Recadastrar com BIOMETRIA')
         print('[2] - Recadastrar com CPF')
@@ -169,9 +191,14 @@ class Interface():
         return op
     
     def excluidoComSucesso(self, morador):
-        print('\n------ DADOS DO MORADOR -----')
+        self.linhaAster()
+        print("***   DADOS DO CADASTRADO  ***")
+        self.linhaAster()
         print(f'{morador}')
-        print('---- Excluído com sucesso! ----')
+        print('| >>>   EXCLUIDO COM SUCESSO!  <<< |')
+        self.linhaDupla()
+
 
     def alteradoComSucesso(self):
-        print('---- Alterado com sucesso! ----')
+        print('| >>>DADOS ALTERADOS COM SUCESSO!<<< |')
+        self.linhaDupla()

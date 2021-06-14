@@ -154,7 +154,7 @@ class Pessoa:
             return valor
 
     def __repr__(self):
-        return f'Nome:{self.nome}, idade: {self.idade}, dose: {self.dose}'
+        return f'| NOME:{self.nome} \n| IDADE: {self.idade}\n| DOSE VACINA: {self.dose}'
 
 class PessoaCPF(Pessoa):
 
@@ -344,5 +344,5 @@ class Vacina:
         return {'fabricante': self.fabricante, 'lote': self.lote, 'quantidade': self.quantidade}
 
     def __repr__(self):
-        return f'Fabricante: {self.fabricante}, quantidade: {self.quantidade}, lote: {self.lote}'
+        return f'| Fabricante: {self.fabricante}\n| quantidade: {self.quantidade}\n| lote: {self.lote}'
 
