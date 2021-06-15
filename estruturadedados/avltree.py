@@ -218,3 +218,9 @@ class AVL():
         yield self.root
         if self.root.right:
             yield from self.root.right
+
+    def getRoot(self):
+        return self.root
+
+    def getSize(self):
+        return self.size

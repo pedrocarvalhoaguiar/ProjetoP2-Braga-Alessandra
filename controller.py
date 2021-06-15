@@ -87,7 +87,6 @@ class Controlador():
         except ValueError:
             self.interface.cpfInvalido()
 
-
     def cadastroVacina(self):
         fabricante, lote, quantidade = self.interface.receberInfoVacina()
         vacina = Vacina(fabricante, lote, int(quantidade))
@@ -130,8 +129,8 @@ class Controlador():
         else:
             self.interface.tituloMostrarVacina()
             for vacina in vacinas:
-                if vacina.valor.temVacina():
-                    self.interface.mostrarVacina(vacina.valor)
+                if vacina.getValor().temVacina():
+                    self.interface.mostrarVacina(vacina.getValor())
             self.interface.linhaDupla()
             self.menuBusca()
 
@@ -140,11 +139,11 @@ class Controlador():
         moradoresCPF = self.gerenciador.retornarArvoreCPF()
         moradoresBio = self.gerenciador.retornarArvoreBio()
         try:
-            self.interface.mostrarMoradores(moradoresCPF, 'CPF', moradoresCPF.size)
+            self.interface.mostrarMoradores(moradoresCPF, 'CPF', moradoresCPF.getSize())
         except (IndexError, AttributeError):
             self.interface.semMoradores('CPF')
         try:
-            self.interface.mostrarMoradores(moradoresBio, 'BIOMETRIA', moradoresBio.size)
+            self.interface.mostrarMoradores(moradoresBio, 'BIOMETRIA', moradoresBio.getSize())
         except (IndexError, AttributeError):
             self.interface.semMoradores('BIOMETRIA')
 
@@ -167,14 +166,14 @@ class Controlador():
             op = self.interface.refazerCadastro(pessoa)
             if op == '1':
                 novaPessoa = self.cadastroBIO(novaPessoa=True)
-                novaPessoa.dose, novaPessoa.vacina = pessoa.dose, pessoa.vacina
+                novaPessoa.setDose(pessoa.getDose()), novaPessoa.setVacina(pessoa.getNomeVacina()) 
                 self.gerenciador.cadastrarPessoa(novaPessoa)
                 self.gerenciador.excluirCadastro(pessoa)
                 self.interface.alteradoComSucesso()
                 self.menuCadastrado(pessoa)
             elif op == '2':
                 novaPessoa = self.cadastroCPF(novaPessoa=True)
-                novaPessoa.dose, novaPessoa.vacina = pessoa.dose, pessoa.vacina
+                novaPessoa.setDose(pessoa.getDose()), novaPessoa.setVacina(pessoa.getNomeVacina()) 
                 self.gerenciador.cadastrarPessoa(novaPessoa)
                 self.gerenciador.excluirCadastro(pessoa)
                 self.interface.alteradoComSucesso()

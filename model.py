@@ -26,7 +26,7 @@ class GerenciadorPrincipal():
 
     def vacinarPessoa(self, pessoa, vacina):
         self.gerPessoas.vacinarPessoa(pessoa, vacina)
-        self.gerVacina.diminuirEstoque(vacina.lote)
+        self.gerVacina.diminuirEstoque(vacina.getLote())
 
     def retornarVacinaValida(self, fab=None):
         vacina = self.gerVacina.getVacina(fab=fab)
@@ -42,7 +42,7 @@ class GerenciadorPrincipal():
     def excluirCadastro(self, pessoa):
         self.gerPessoas.excluirPessoa(pessoa)
         try:
-            self.gerBiometria.excluirBiometria(pessoa.biometria)
+            self.gerBiometria.excluirBiometria(pessoa.getBiometria())
         except:
             pass
 
@@ -89,12 +89,12 @@ class GerenciadorPessoas():
     def vacinarPessoa(self, pessoa, vacina):
         arvore, chave, caminho = self._chooseArvore(pessoa=pessoa)
         pArvore = arvore.search(chave)
-        pArvore.valor.dose += 1
-        pArvore.valor.setVacina(vacina.fabricante)
+        pArvore.getValor().setDose(1) 
+        pArvore.getValor().setVacina(vacina.fabricante)
         with open(f'{caminho}', 'r+', encoding='UTF-8') as nomeArquivo:
             listaPessoas = json.load(nomeArquivo)
             p = listaPessoas[chave]
-            p['vacina'] = vacina.fabricante
+            p['vacina'] = vacina.getFabricante()
             p['dose'] += 1
             nomeArquivo.seek(0)
             json.dump(listaPessoas, nomeArquivo, indent=4, ensure_ascii=False)
@@ -111,7 +111,7 @@ class GerenciadorPessoas():
     def procurarPessoa(self, chave, tipo):
         arvore = self._chooseArvore(tipo=tipo)
         pessoa = arvore.search(chave)
-        return pessoa.valor
+        return pessoa.getValor()
 
     def _chooseType(self, caminho):
         arvore = self.arvorePessoasCPF if caminho == VACCPF else self.arvorePessoasBiometria
@@ -125,7 +125,7 @@ class GerenciadorPessoas():
             return arvore
         if pessoa:
             arvore = self.arvorePessoasCPF if pessoa.__class__.__name__ == 'PessoaCPF' else self.arvorePessoasBiometria
-            chave = pessoa.cpf if arvore == self.arvorePessoasCPF else pessoa.biometria
+            chave = pessoa.getCpf() if arvore == self.arvorePessoasCPF else pessoa.getBiometria()
             path = VACCPF if arvore == self.arvorePessoasCPF else VACBIO
             return arvore, chave, path
 
@@ -138,7 +138,7 @@ class Pessoa:
         self.vacina = self.setVacina(vacina)
 
     def isVac(self):
-        if self.dose == 2:
+        if self.dose > 1:
             return True
         return False
 
@@ -153,6 +153,12 @@ class Pessoa:
         else:
             return valor
 
+    def getDose(self):
+        return self.dose
+
+    def setDose(self, valor):
+        self.dose += valor
+
     def __repr__(self):
         return f'| NOME:{self.nome} \n| IDADE: {self.idade}\n| DOSE VACINA: {self.dose}'
 
@@ -162,6 +168,9 @@ class PessoaCPF(Pessoa):
         super().__init__(nome, idade, dose, vacina)
         self.cpf = cpf   
 
+    def getCpf(self):
+        return self.cpf
+
     def lineRegistry(self):
         return {'nome': self.nome, 'idade': self.idade, 'vacina': self.getNomeVacina(), 'dose': self.dose, 'cpf': self.cpf}
 
@@ -169,6 +178,9 @@ class PessoaBiometria(Pessoa):
     def __init__(self, nome, idade, dose=0, vacina=None, biom=0):
         super().__init__(nome, idade, dose, vacina)
         self.biometria = biom
+
+    def getBiometria(self):
+        return self.biometria
 
     def associarBiometria(self, biometria):
         self.biometria = biometria
@@ -193,10 +205,10 @@ class GerenciadorBiometria():
         biometriaBD = self._procurarBiometria(nome)
         if biometriaBD:
             biometriaTeste = Bio.leArquivo(nome, path=caminho)
-            biometriaBD = Bio.leArquivo(biometriaBD.chave)
+            biometriaBD = Bio.leArquivo(biometriaBD.getChave())
             arvoreTeste = self._carregarArvoreTeste(biometriaTeste)
             arvoreBD = self._carregarArvoreTeste(biometriaBD)
-            if self._igual(arvoreBD.root, arvoreTeste.root):
+            if self._igual(arvoreBD.getRoot(), arvoreTeste.getRoot()):
                 return nome
         return False
 
@@ -237,22 +249,22 @@ class GerenciadorBiometria():
         while not fila1.isEmpty() and not fila2.isEmpty():
             pos1 = fila1.first.valor
             pos2 = fila2.first.valor
-            if pos1.chave != pos2.chave:
+            if pos1.getChave() != pos2.getChave():
                 return False
             fila1.pop()
             fila2.pop()
             count +=1
             if count > 40:
                 return True
-            if pos1.left and pos2.left:
-                fila1.push(pos1.left)
-                fila2.push(pos2.left)
-            elif pos1.left or pos2.left:
+            if pos1.getLeft() and pos2.getLeft():
+                fila1.push(pos1.getLeft())
+                fila2.push(pos2.getLeft())
+            elif pos1.getLeft() or pos2.getLeft():
                 return False
-            if pos1.right and pos2.right:
-                fila1.push(pos1.right)
-                fila2.push(pos2.right)
-            elif pos1.right or pos2.right:
+            if pos1.getRight() and pos2.getRight():
+                fila1.push(pos1.getRight())
+                fila2.push(pos2.getRight())
+            elif pos1.getRight() or pos2.getRight():
                 return False
         return True
 
@@ -279,17 +291,17 @@ class GerenciadorVacina():
                 json.dump(data, nomeArquivo, indent=4, ensure_ascii=False)
     
     def cadastrarVacina(self, vacina):
-        self.arvoreVacinas.insert(vacina.lote, valor=vacina)
+        self.arvoreVacinas.insert(vacina.getLote(), valor=vacina)
         self.setEstoque(vacina.quantidade)
         with open(f'{VACI}', 'r+', encoding='UTF-8') as nomeArquivo:
             listaVacinas = json.load(nomeArquivo)
-            listaVacinas[f'{vacina.lote}'] = vacina.lineRegistry()
+            listaVacinas[f'{vacina.getLote()}'] = vacina.lineRegistry()
             nomeArquivo.seek(0)
             json.dump(listaVacinas, nomeArquivo, indent=4, ensure_ascii=False)
 
     def diminuirEstoque(self, lote):
         vacina = self.arvoreVacinas.search(lote)
-        vacina.valor.setQuantidade(1)
+        vacina.getValor().setQuantidade(1)
         self.setEstoque(1)
         if not vacina.valor.temVacina():
             self.arvoreVacinas.delete(lote)
@@ -304,10 +316,10 @@ class GerenciadorVacina():
         if self.arvoreVacinas.isEmpty():
             return None
         if fab == 'N/A':
-            return self.arvoreVacinas.root.valor
-        for vacina in self.arvoreVacinas:            
-            if vacina.valor.fabricante == fab and vacina.valor.temVacina():
-                return vacina.valor
+            return self.arvoreVacinas.getRoot().getValor()
+        for node in self.arvoreVacinas:            
+            if node.getValor().getFabricante() == fab and node.getValor().temVacina():
+                return node.getValor()
 
     def retornarEstoque(self):
         return self.estoque
@@ -339,6 +351,12 @@ class Vacina:
         if self.quantidade == 0:
             return False
         return True
+
+    def getLote(self):
+        return self.lote
+
+    def getFabricante(self):
+        return self.fabricante
 
     def lineRegistry(self):
         return {'fabricante': self.fabricante, 'lote': self.lote, 'quantidade': self.quantidade}

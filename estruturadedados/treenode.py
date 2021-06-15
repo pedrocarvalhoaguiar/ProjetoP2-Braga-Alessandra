@@ -6,6 +6,18 @@ class TreeNode():
         self.chave = chave
         self.valor = valor
 
+    def getChave(self):
+        return self.chave
+
+    def getValor(self):
+        return self.valor
+
+    def getLeft(self):
+        return self.left
+    
+    def getRight(self):
+        return self.right
+
     def isLeaf(self):
         if not self.left and not self.right:
             return True
