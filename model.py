@@ -83,7 +83,7 @@ class GerenciadorPessoas():
         with open(f'{caminho}', 'r+', encoding='UTF-8') as nomeArquivo:
             listaPessoa = json.load(nomeArquivo)
             listaPessoa[chave] = pessoa.lineRegistry()
-            nomeArquivo.seek(0)
+        with open(f'{caminho}', 'w', encoding='UTF-8') as nomeArquivo:
             json.dump(listaPessoa, nomeArquivo, indent=4, ensure_ascii=False)
 
     def vacinarPessoa(self, pessoa, vacina):
@@ -91,12 +91,14 @@ class GerenciadorPessoas():
         pArvore = arvore.search(chave)
         pArvore.getValor().setDose(1) 
         pArvore.getValor().setVacina(vacina.fabricante)
+        print(2)
         with open(f'{caminho}', 'r+', encoding='UTF-8') as nomeArquivo:
             listaPessoas = json.load(nomeArquivo)
             p = listaPessoas[chave]
+            print(listaPessoas)
             p['vacina'] = vacina.getFabricante()
             p['dose'] += 1
-            nomeArquivo.seek(0)
+        with open(f'{caminho}', 'w', encoding='UTF-8') as nomeArquivo:
             json.dump(listaPessoas, nomeArquivo, indent=4, ensure_ascii=False)
 
     def excluirPessoa(self, pessoa):
@@ -296,7 +298,7 @@ class GerenciadorVacina():
         with open(f'{VACI}', 'r+', encoding='UTF-8') as nomeArquivo:
             listaVacinas = json.load(nomeArquivo)
             listaVacinas[f'{vacina.getLote()}'] = vacina.lineRegistry()
-            nomeArquivo.seek(0)
+        with open(f'{VACI}', 'w', encoding='UTF-8') as nomeArquivo:
             json.dump(listaVacinas, nomeArquivo, indent=4, ensure_ascii=False)
 
     def diminuirEstoque(self, lote):
@@ -309,7 +311,7 @@ class GerenciadorVacina():
             listaVacinas = json.load(nomeArquivo)
             vacina = listaVacinas[lote]
             vacina['quantidade'] -= 1
-            nomeArquivo.seek(0)
+        with open(f'{VACI}', 'w', encoding='UTF-8') as nomeArquivo:
             json.dump(listaVacinas, nomeArquivo, indent=4, ensure_ascii=False)
 
     def getVacina(self, fab=None):
