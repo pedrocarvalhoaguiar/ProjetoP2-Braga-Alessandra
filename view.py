@@ -141,9 +141,9 @@ class Interface():
         print(">>> CADASTRANDO...")
         sleep(1)
 
-    def tituloMostrarVacina(self):
+    def tituloMostrarVacina(self, qnt):
         self.linhaAster()
-        print("***       VACINA EM ESTOQUE      ***")
+        print(f"***  {qnt}     VACINA(S) EM ESTOQUE      ***")
         self.linhaAster()
 
     def mostrarVacina(self, vacina):

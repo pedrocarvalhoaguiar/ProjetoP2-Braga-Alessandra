@@ -124,10 +124,11 @@ class Controlador():
     def mostrarEstoque(self):
         self.interface.procurando()
         vacinas = self.gerenciador.retornarArvoreVacinas()
+        qnt = self.gerenciador.retornarQuantidadeEstoque()
         if vacinas.isEmpty():
             self.interface.estoqueVazio()
         else:
-            self.interface.tituloMostrarVacina()
+            self.interface.tituloMostrarVacina(qnt)
             for vacina in vacinas:
                 if vacina.getValor().temVacina():
                     self.interface.mostrarVacina(vacina.getValor())

@@ -32,6 +32,9 @@ class GerenciadorPrincipal():
         vacina = self.gerVacina.getVacina(fab=fab)
         return vacina
 
+    def retornarQuantidadeEstoque(self):
+        return self.gerVacina.retornarEstoque()
+
     def retornarPessoaBio(self, path):
         nomeBio = self.gerBiometria.compararBiometria(path)
         if nomeBio:
