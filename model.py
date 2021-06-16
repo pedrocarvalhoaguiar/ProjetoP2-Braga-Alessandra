@@ -91,11 +91,9 @@ class GerenciadorPessoas():
         pArvore = arvore.search(chave)
         pArvore.getValor().setDose(1) 
         pArvore.getValor().setVacina(vacina.fabricante)
-        print(2)
         with open(f'{caminho}', 'r+', encoding='UTF-8') as nomeArquivo:
             listaPessoas = json.load(nomeArquivo)
             p = listaPessoas[chave]
-            print(listaPessoas)
             p['vacina'] = vacina.getFabricante()
             p['dose'] += 1
         with open(f'{caminho}', 'w', encoding='UTF-8') as nomeArquivo:
@@ -303,8 +301,8 @@ class GerenciadorVacina():
 
     def diminuirEstoque(self, lote):
         vacina = self.arvoreVacinas.search(lote)
-        vacina.getValor().setQuantidade(1)
-        self.setEstoque(1)
+        vacina.getValor().setQuantidade(-1)
+        self.setEstoque(-1)
         if not vacina.valor.temVacina():
             self.arvoreVacinas.delete(lote)
         with open(f'{VACI}', 'r+', encoding='UTF-8') as nomeArquivo:
@@ -330,7 +328,7 @@ class GerenciadorVacina():
         if qnt > 0:
             self.estoque += qnt
         elif qnt < 0:
-            self.estoque -= qnt
+            self.estoque = self.estoque - 1
         else:
             self.estoque = 0
 
@@ -342,10 +340,12 @@ class Vacina:
         self.quantidade = quantidade
     
     def setQuantidade(self, qnt):
-        if qnt > 0:
+        if self.quantidade == 0:
+            self.quantidade = 0
+        elif qnt > 0:
             self.quantidade += qnt
         elif qnt < 0:
-            self.quantidade -= qnt
+            self.quantidade = self.quantidade - 1            
         else:
             self.quantidade = 0
 

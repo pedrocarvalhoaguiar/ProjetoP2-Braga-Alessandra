@@ -61,6 +61,9 @@ class AVL():
         node = self.root if node == 'root' else node
         if node == self.root:
             root = True 
+            if not node.right and not node.left:
+                self.root = None
+                return
         if self.isEmpty():
             raise IndexError('Árvore vazia')
         elif node == None:
