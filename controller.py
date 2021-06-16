@@ -174,7 +174,7 @@ class Controlador():
                 novaPessoa.setDose(dose), novaPessoa.setVacina(vacina) 
                 self.gerenciador.cadastrarPessoa(novaPessoa)
                 self.interface.alteradoComSucesso()
-                self.menuCadastrado(pessoa)
+                self.menuCadastrado(novaPessoa)
             elif op == '2':
                 dose, vacina = pessoa.getDose(), pessoa.getNomeVacina()
                 self.gerenciador.excluirCadastro(pessoa)
@@ -182,7 +182,7 @@ class Controlador():
                 novaPessoa.setDose(dose), novaPessoa.setVacina(vacina) 
                 self.gerenciador.cadastrarPessoa(novaPessoa)                
                 self.interface.alteradoComSucesso()
-                self.menuCadastrado(pessoa)
+                self.menuCadastrado(novaPessoa)
             elif op == '3':
                 self.menuCadastrado(pessoa)
             else:
