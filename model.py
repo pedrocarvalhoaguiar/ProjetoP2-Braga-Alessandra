@@ -364,5 +364,5 @@ class Vacina:
         return {'fabricante': self.fabricante, 'lote': self.lote, 'quantidade': self.quantidade}
 
     def __repr__(self):
-        return f'| Fabricante: {self.fabricante}\n| quantidade: {self.quantidade}\n| lote: {self.lote}'
+        return f'| Fabricante: {self.fabricante}\n| Quantidade: {self.quantidade}\n| Lote: {self.lote}'
 
