@@ -168,17 +168,19 @@ class Controlador():
         while True:
             op = self.interface.refazerCadastro(pessoa)
             if op == '1':
-                novaPessoa = self.cadastroBIO(novaPessoa=True)
-                novaPessoa.setDose(pessoa.getDose()), novaPessoa.setVacina(pessoa.getNomeVacina()) 
-                self.gerenciador.cadastrarPessoa(novaPessoa)
+                dose, vacina = pessoa.getDose(), pessoa.getNomeVacina()
                 self.gerenciador.excluirCadastro(pessoa)
+                novaPessoa = self.cadastroBIO(novaPessoa=True)
+                novaPessoa.setDose(dose), novaPessoa.setVacina(vacina) 
+                self.gerenciador.cadastrarPessoa(novaPessoa)
                 self.interface.alteradoComSucesso()
                 self.menuCadastrado(pessoa)
             elif op == '2':
-                novaPessoa = self.cadastroCPF(novaPessoa=True)
-                novaPessoa.setDose(pessoa.getDose()), novaPessoa.setVacina(pessoa.getNomeVacina()) 
-                self.gerenciador.cadastrarPessoa(novaPessoa)
+                dose, vacina = pessoa.getDose(), pessoa.getNomeVacina()
                 self.gerenciador.excluirCadastro(pessoa)
+                novaPessoa = self.cadastroCPF(novaPessoa=True)
+                novaPessoa.setDose(dose), novaPessoa.setVacina(vacina) 
+                self.gerenciador.cadastrarPessoa(novaPessoa)                
                 self.interface.alteradoComSucesso()
                 self.menuCadastrado(pessoa)
             elif op == '3':
