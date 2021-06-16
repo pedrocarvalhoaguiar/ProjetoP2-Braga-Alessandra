@@ -102,8 +102,10 @@ class Controlador():
             if pessoaB:
                 self.menuCadastrado(pessoaB)
             else:
-                self.interface.bioInvalida()
-                self.menuBusca()
+                raise ValueError
+        except ValueError:
+            self.interface.bioInvalida()
+            self.menuBusca()
         except IndexError:
             self.interface.semMoradores('BIOMETRIA')
             self.menuBusca()
