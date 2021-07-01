@@ -8,7 +8,7 @@
 ## 6. Renan Alves de Oliveira – 202022207
 ## 7. Adriana Santos Pereira – 202021922
 ## 8. Rafael Alves Pinheiro – 202021930
-
+## link da apresentação https://www.youtube.com/watch?v=1f6m-j5-jfE
 ### Sistema de cadastro para vacinação, contando com cadastro por biometria(simulada) e por CPF
 
 - Sistema para cadastro de pessoas de rua vacinadas. Uma vez que uma pessoa de rua raramente tem identidade ou vai guardar caderneta de vacinação e coisas assim, seria importante armazenar dados significativos para poder encontrar a pessoa novamente ou identificá-la se reencontrá-la. 
